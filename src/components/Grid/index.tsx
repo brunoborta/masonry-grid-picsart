@@ -1,8 +1,10 @@
-function Grid() {
+import { Container } from "./styles"
+// import Photo from '../../components/Photo';
+const Grid: React.FC = () => {
   return (
-    <h1>
-     aksjdnjaskdn 
-    </h1>
+    <Container>
+
+    </Container>
   )
 }
 
