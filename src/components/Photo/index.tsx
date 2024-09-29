@@ -1,3 +1,4 @@
+import { Image } from './styles';
 type Photo = {
   id: number;
   urls: { regular: string; };
@@ -10,7 +11,7 @@ type Photo = {
 
 const PhotoComponent: React.FC<{photo: Photo}> = ({ photo }) => {
     return(
-        <img src={photo.urls.regular} alt={`Photo of ${photo.user.username}`} />
+        <Image src={photo.urls.regular} alt={`Photo of ${photo.user.username}`} />
     )
 }
 
