@@ -2,9 +2,9 @@ import { useEffect, useRef, useState } from "react";
 import { Container } from "./styles";
 import Photo from "../../components/Photo";
 import { IMAGES_PER_PAGE } from "../../components/Grid/constants";
-// import Photo from '../../components/Photo';
+import { Photo as PhotoType } from "../../components/Photo/types";
 const Grid: React.FC = () => {
-  const [images, setImages] = useState<any[]>([]);
+  const [images, setImages] = useState<PhotoType[]>([]);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const observer = useRef<IntersectionObserver | null>(null);
@@ -24,7 +24,7 @@ const Grid: React.FC = () => {
     }
 
     fetchImages();
-  }, []);
+  }, [page]);
 
   const lastImageElementRef = (node: HTMLDivElement) => {
     if (loading) return;
@@ -43,7 +43,7 @@ const Grid: React.FC = () => {
     <Container>
       {images.map((image, index) => {
         if (images.length === index + 1) {
-          return <div ref={lastImageElementRef} key={`${image.id}-${index}`}><Photo photo={image} /></div>
+          return <div ref={lastImageElementRef} key={`${image.id}-${index}-${new Date().getMilliseconds()}`}><Photo photo={image} /></div>
         } else {
           return <div key={image.id}><Photo photo={image} /></div>
         }
