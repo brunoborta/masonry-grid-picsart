@@ -1,8 +1,9 @@
 import ReactDOM from "react-dom";
 import { Photo as PhotoType } from "../Photo/types";
-import { CloseButton, Modal, Overlay } from "./styles";
+import { BlockDescription, CloseButton, CloseIcon, CreatedAt, Description, Modal, Overlay, Title } from "./styles";
 import { useModal } from "../../hooks/useModal";
 import Photo from "../Photo";
+import { useEffect, useRef } from "react";
 
 interface PhotoDetailsProps {
     isOpen: boolean;

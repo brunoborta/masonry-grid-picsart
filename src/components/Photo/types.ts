@@ -7,4 +7,6 @@ export type Photo = {
     name: string;
   };
   alt_description: string;
+  created_at: string;
+  description: string;
 };

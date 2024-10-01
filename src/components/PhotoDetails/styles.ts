@@ -18,15 +18,51 @@ export const Overlay = styled.div`
 `;
 
 export const Modal = styled.div`
-    width: 90%;
-    height: 90%;
+    position: relative;
+    height: 100%;
 `;
 
 export const CloseButton = styled.button`
     position: absolute;
     top: 1rem;
     right: 1rem;
-    background-color: transparent;
+    background-color: white;
+    padding: 0.4rem;
+    border-radius: 50%;
     border: none;
     cursor: pointer;
+
+    display: flex;
+    align-items: center;
+`;
+
+export const CloseIcon = styled.svg`
+    width: 1.5rem;
+    height: 1.5rem;
+`;
+
+export const BlockDescription = styled.div`
+    position: absolute;
+    bottom: 1rem;
+    right: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+`;
+export const Title = styled.h2`
+    font-size: 1.5rem;
+    background-color: rgba(0, 0, 0, 0.4);
+    color: #fff;
+    padding: 0.5rem;
+`;
+
+export const Description = styled.p`
+    font-size: 1rem;
+    background-color: rgba(0, 0, 0, 0.4);
+    color: #fff;
+    padding: 0.5rem;
+`;
+
+export const CreatedAt = styled(Description)`
+    font-size: 0.8rem;
 `;
