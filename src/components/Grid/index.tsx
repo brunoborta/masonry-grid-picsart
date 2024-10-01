@@ -1,9 +1,10 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Container } from "./styles";
+import { Container, PhotoWrapper } from "./styles";
 import Photo from "../../components/Photo";
 import { Photo as PhotoType } from "../../components/Photo/types";
 import PhotoDetails from "../PhotoDetails";
 import { useModal } from "../../hooks/useModal";
+import ScrollLock from "react-scrolllock";
 
 export const IMAGES_PER_PAGE = 15;
 const Grid: React.FC = () => {
@@ -46,18 +47,32 @@ const Grid: React.FC = () => {
     }
   }, [loading]);
 
+  const handleModal = (image: PhotoType) => {
+    setIsOpen(true);
+    setSelectedPhoto(image);
+  }
+
   return(
-    <Container>
-      {images.map((image, index) => {
-        if (images.length === index + 1) {
-          return <div ref={lastImageElementRef} onClick={() => {setIsOpen(true); setSelectedPhoto(image)}} key={`${image.id}-${index}-${new Date().getMilliseconds()}`}><Photo photo={image} /></div>
-        } else {
-          return <div onClick={() => {setIsOpen(true); setSelectedPhoto(image)}} key={image.id}><Photo photo={image} /></div>
-        }
-      })}
-      {loading && <p>Loading...</p>}
-      {isOpen && selectedPhoto && <PhotoDetails isOpen={isOpen} photo={selectedPhoto} />}
-    </Container>
+    <ScrollLock isActive={isOpen}>
+      <Container>
+        {images.map((image, index) => {
+          if (images.length === index + 1) {
+            return (
+              <PhotoWrapper ref={lastImageElementRef} key={`${image.id}-${index}}`} onClick={() => handleModal(image)}>
+                <Photo photo={image} />
+              </PhotoWrapper>
+            )
+          }
+          return (
+            <PhotoWrapper key={`${image.id}-${index}}`} onClick={() => handleModal(image)}>
+              <Photo photo={image} />
+            </PhotoWrapper>
+          )
+        })}
+        {loading && <p>Loading...</p>}
+        {isOpen && selectedPhoto && <PhotoDetails isOpen={isOpen} photo={selectedPhoto} />}
+      </Container>
+    </ScrollLock>
   )
 }
 
