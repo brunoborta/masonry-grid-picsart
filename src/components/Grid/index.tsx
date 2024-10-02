@@ -1,19 +1,20 @@
-import { useEffect, useMemo, useRef, useState } from "react";
-import { Container, PhotoWrapper } from "./styles";
-import Photo from "../../components/Photo";
+import { useEffect, useState } from "react";
+import { Container } from "./styles";
 import { Photo as PhotoType } from "../../components/Photo/types";
 import PhotoDetails from "../PhotoDetails";
 import { useModal } from "../../hooks/useModal";
 import ScrollLock from "react-scrolllock";
+import PhotoList from "../PhotoList";
+import { useLoader } from "../../hooks/useLoader";
+import { useKeyDown } from "../../hooks/useKeyDown";
 
 export const IMAGES_PER_PAGE = 15;
 const Grid: React.FC = () => {
   const {isOpen, setIsOpen} = useModal()
-  const [images, setImages] = useState<PhotoType[]>([]);
+  const {isLoading, setLoading} = useLoader();
+  const [photos, setPhotos] = useState<PhotoType[]>([]);
   const [page, setPage] = useState(1);
   const [selectedPhoto, setSelectedPhoto] = useState<PhotoType | null>(null);
-  const [loading, setLoading] = useState(false);
-  const observer = useRef<IntersectionObserver | null>(null);
 
   useEffect(() => {
     const fetchImages = async () => {
@@ -21,56 +22,30 @@ const Grid: React.FC = () => {
       try {
         const response = await fetch(`https://api.unsplash.com/photos/?client_id=${import.meta.env.VITE_UNSPLASH_ACCESS_KEY}&page=${page}&per_page=${IMAGES_PER_PAGE}`);
         const data = await response.json();
-        setImages(prevImages => [...prevImages, ...data]);
+        setPhotos(prevPhotos => [...prevPhotos, ...data]);
       } catch (error) {
-       console.error(error);
+        console.error(error);
       } finally {
         setLoading(false);
       }
     }
 
     fetchImages();
-  }, [page]);
-
-  const lastImageElementRef = useMemo(() => {
-    return (node: HTMLDivElement | null) => {
-      if (loading) return;
-      if (observer.current) observer.current.disconnect();
-  
-      observer.current = new IntersectionObserver((entries) => {
-        if (entries[0].isIntersecting) {
-          setPage((prevPage) => prevPage + 1);
-        }
-      });
-  
-      if (node) observer.current.observe(node);
-    }
-  }, [loading]);
+  }, [page, setLoading]); 
 
   const handleModal = (image: PhotoType) => {
     setIsOpen(true);
     setSelectedPhoto(image);
   }
 
+  useKeyDown('Escape', () => setIsOpen(false));
+
   return(
     <ScrollLock isActive={isOpen}>
       <Container>
-        {images.map((image, index) => {
-          if (images.length === index + 1) {
-            return (
-              <PhotoWrapper ref={lastImageElementRef} key={`${image.id}-${index}}`} onClick={() => handleModal(image)}>
-                <Photo photo={image} />
-              </PhotoWrapper>
-            )
-          }
-          return (
-            <PhotoWrapper key={`${image.id}-${index}}`} onClick={() => handleModal(image)}>
-              <Photo photo={image} />
-            </PhotoWrapper>
-          )
-        })}
-        {loading && <p>Loading...</p>}
-        {isOpen && selectedPhoto && <PhotoDetails isOpen={isOpen} photo={selectedPhoto} />}
+        <PhotoList photos={photos} handleModal={handleModal} setPage={setPage} />      
+        {isLoading && <p>Loading...</p>}
+        {isOpen && selectedPhoto && <PhotoDetails photo={selectedPhoto} />}
       </Container>
     </ScrollLock>
   )

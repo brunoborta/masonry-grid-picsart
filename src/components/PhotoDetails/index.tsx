@@ -8,7 +8,6 @@ import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 
 interface PhotoDetailsProps {
-    isOpen: boolean;
     photo: PhotoType;
 }
 
