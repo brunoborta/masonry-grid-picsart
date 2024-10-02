@@ -15,6 +15,7 @@ export const Overlay = styled.div`
     z-index: 999;
 
     backdrop-filter: blur(5px) grayscale(80%);
+    opacity: 0;
 `;
 
 export const Modal = styled.div`
@@ -27,13 +28,14 @@ export const CloseButton = styled.button`
     top: 1rem;
     right: 1rem;
     background-color: white;
-    padding: 0.4rem;
+    padding: 0.5rem;
     border-radius: 50%;
     border: none;
     cursor: pointer;
 
     display: flex;
     align-items: center;
+    scale: 0;
 `;
 
 export const CloseIcon = styled.svg`
